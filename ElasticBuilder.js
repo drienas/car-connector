@@ -5,6 +5,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const ELASTIC_API = process.env.ELASTIC_API || null;
 if (!ELASTIC_API) throw `No ELASTIC_API environment variable set`;
+const ES_API_TOKEN = process.env.ES_API_TOKEN || null;
+if (!ES_API_TOKEN) throw `No ES_API_TOKEN environment variable set`;
 
 module.exports = class Elastic {
   static addPagination(page = 1, perPage = 10) {
@@ -185,7 +187,12 @@ module.exports = class Elastic {
     };
 
     try {
-      let data = await axios.post(`${ELASTIC_API}/api/v2/cars/filter`, query);
+      let data = await axios.post(`${ELASTIC_API}/api/v2/cars/filter`, query, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${ES_API_TOKEN}`,
+        },
+      });
       return data.data;
     } catch (err) {
       console.log(err);
