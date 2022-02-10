@@ -184,8 +184,6 @@ module.exports = class Elastic {
       ],
     };
 
-    console.log(JSON.stringify(query, null, 2));
-
     try {
       let data = await axios.post(`${ELASTIC_API}/api/v2/cars/filter`, query);
       return data.data;

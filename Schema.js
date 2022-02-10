@@ -1,3 +1,10 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+const PF_EP = process.env.PF_EP || null;
+if (!PF_EP) throw `No PF_EP environment variable set`;
+
 const {
   GraphQLSchema,
   GraphQLObjectType,
@@ -92,19 +99,19 @@ const Vehicle = new GraphQLObjectType({
                   rawUrl: {
                     type: GraphQLString,
                     resolve: (args) => {
-                      return `https://cdn1.dieschneidergruppe.de/images/v1/raw${args.url}`;
+                      return `${PF_EP}/v1/raw${args.url}`;
                     },
                   },
                   brandUrl: {
                     type: GraphQLString,
                     resolve: (args) => {
-                      return `https://cdn1.dieschneidergruppe.de/images/v2/brand/BRANDDSG${args.url}`;
+                      return `${PF_EP}/v2/brand/BRANDDSG${args.url}`;
                     },
                   },
                   borUrl: {
                     type: GraphQLString,
                     resolve: (args) => {
-                      return `https://cdn1.dieschneidergruppe.de/images/v2/brand/BRANDBOR${args.url}`;
+                      return `${PF_EP}/v2/brand/BRANDBOR${args.url}`;
                     },
                   },
                 },
@@ -120,9 +127,7 @@ const Vehicle = new GraphQLObjectType({
       resolve: async (args) => {
         let vin = args.fahrgestellnr;
         if (!!vin) {
-          let request = await axios.get(
-            `https://cdn1.dieschneidergruppe.de/images/v1/status/${vin}`
-          );
+          let request = await axios.get(`${PF_EP}/v1/status/${vin}`);
           if (request.status === 200) {
             let data = request.data;
             if (data.success) {
