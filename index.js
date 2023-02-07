@@ -30,7 +30,6 @@ gatherAsyncData().then(() => {
   const schema = require('./Schema').Schema;
   const app = express();
   app.use(cors());
-  if (process.env.NODE_ENV === 'production') app.use(jwtCheck);
 
   app.use(passport.authenticate('basic', { session: false }));
   app.use(
