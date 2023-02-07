@@ -5,10 +5,8 @@ if (process.env.NODE_ENV !== 'production') {
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 
-const AUTH_ISSUER = process.env.AUTH_ISSUER || null;
-if (!AUTH_ISSUER) throw `No AUTH_ISSUER environment variable set`;
-const AUTH_AUDIENCE = process.env.AUTH_AUDIENCE || null;
-if (!AUTH_AUDIENCE) throw `No AUTH_AUDIENCE environment variable set`;
+const AUTH_USER = process.env.AUTH_USER || null;
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD || null;
 
 module.exports = jwt({
   secret: jwks.expressJwtSecret({

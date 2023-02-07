@@ -17,6 +17,7 @@ const {
 
 const axios = require('axios');
 const Elastic = require('./ElasticBuilder');
+const ElasticGetter = require('./ElasticGetter');
 const validate = require('./Validation');
 
 const Vehicle = new GraphQLObjectType({
@@ -142,22 +143,33 @@ const Vehicle = new GraphQLObjectType({
   },
 });
 
+const VehicleFull = new GraphQLObjectType({
+  name: 'VehicleFull',
+  fields: {
+    ...require('./GatherGlobalData').VehicleAttributes,
+  },
+});
+
 const Schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     description: 'Das Root-Query Element',
     fields: () => ({
-      VehicleDetails: {
-        type: Vehicle,
+      VehicleData: {
+        type: VehicleFull,
         description: 'Fahrzeugdetails für einzelnes Fahrzeug',
         args: {
           fzg_id: {
             type: GraphQLString,
             description: 'Die interne Fahrzeug-Id',
           },
+          vin: {
+            type: GraphQLString,
+            description: 'Die Fahrgestellnummer',
+          },
         },
         resolve: (_, args) => {
-          return { fzg_id: '123' };
+          return ElasticGetter(args);
         },
       },
       VehicleSearch: {
